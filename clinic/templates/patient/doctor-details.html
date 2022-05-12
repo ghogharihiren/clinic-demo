@@ -1,0 +1,31 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block title %}
+<title>Home</title>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="row shuffle-wrapper portfolio-gallery">
+
+    {% for user in user %}
+    <div class="col-lg-3 col-sm-6 col-md-6 mb-4 shuffle-item" data-groups="[&quot;cat2&quot;]">
+        <div class="position-relative doctor-inner-box">
+            <div class="doctor-profile">
+                <div class="doctor-img">
+                <img src="" alt="doctor-image" class="img-fluid w-100">
+                </div>
+            </div>
+            <div class="content mt-3">
+                <h4>{{user.first_name}} {{user.last_name}}</h4>
+                <p>degree:{{user.types}} /specialty:{{user.specialty}}</p>   
+                <h4 class="mb-0"><a href="{% url 'view-doctor' user.id%}">views details</a></h4> 
+            </div> 
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block title %}
+<title>Home</title>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header border-0">
+            <h3 class="mb-0">{{user1.first_name}} {{user1.last_name}}</h3>
+          </div>
+          <!-- Light table -->
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="sort" data-sort="name">DR.Name</th>
+                  <th scope="col" class="sort" data-sort="budget">Date</th>
+                  <th scope="col" class="sort" data-sort="status">Time</th>
+                  <th scope="col" class="sort" data-sort="status">clinicname</th>
+                  <th scope="col" class="sort" data-sort="status">Status</th>
+                  <th scope="col" class="sort" data-sort="status"></th>
+
+                </tr>
+              </thead>
+              <tbody class="list">
+                {% for app in app %}
+                <tr>
+                  <th scope="row">
+                    <div class="media align-items-center">
+                      <div class="media-body">
+                        <span class="name mb-0 text-sm">{{app.slot.doctor.first_name}} {{app.slot.doctor.last_name}}</span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="budget">
+                    <i class="fa fa-inr"></i> {{app.slot.weeks}}
+                  </td>
+                  <td>
+                    <span class="badge badge-dot mr-4">
+                      
+                      <span class="status">{{app.slot.timeslot}}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge badge-dot mr-4">
+                      
+                      <span class="status">{{app.slot.doctor.clinicname}}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge badge-dot mr-4">
+                      
+                      <span class="status">{{app.status}}</span>
+                    </span>
+                  </td>
+                  {% if app.status == 'pending' %}
+                  <td>
+			            <li class="nav-item"><a class="nav-link" href="{% url 'cancel-appointment' app.id%}">Cancel</a></li>
+                  </td>
+                  {% endif %}
+                  <td class="text-right">
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+{% endblock %}

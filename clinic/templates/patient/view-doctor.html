@@ -1,0 +1,84 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block title %}
+<title>Home</title>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+           
+            
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header border-0">
+            <h3 class="mb-0"> Dr {{user1.first_name}} {{user1.last_name}}</h3>
+          </div>
+          <!-- Light table -->
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="sort" data-sort="name">Day</th>
+                  <th scope="col" class="sort" data-sort="budget">Time</th>
+                  <th scope="col" class="sort" data-sort="status">Available</th>
+                  <th scope="col" class="sort" data-sort="status"></th>
+
+                </tr>
+              </thead>
+              <tbody class="list">
+                {% for slot in slot %}
+                <tr>
+                  <th scope="row">
+                    <div class="media align-items-center">
+                      <div class="media-body">
+                        <span class="name mb-0 text-sm">{{slot.weeks}}</span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="budget">
+                    <i class="fa fa-inr"></i> {{slot.timeslot}}
+                  </td>
+                  <td>
+                    <span class="badge badge-dot mr-4">
+                      
+                      <span class="status">{{slot.avalible_slot}}</span>
+                    </span>
+                  {% if slot.avalible_slot > 0 %}
+                  </td>
+                  <td>
+			            <li class="nav-item"><a class="nav-link" href="{% url 'view-appointment' slot.id %}">Book</a></li>
+                  </td>
+                  <td class="text-right">
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+{% endblock %}
