@@ -12,9 +12,9 @@ class User(AbstractUser):
     mobile=models.CharField(max_length=20)
     clinicname=models.CharField(max_length=50,null=True,blank=True)
     role=models.CharField(max_length=10,choices=Role,null=True,blank=True)
-    pic= models.FileField(upload_to='profile/')
     types=models.CharField(max_length=10,choices=Type,null=True,blank=True)
     specialty=models.CharField(max_length=50,null=True,blank=True)
+    pic=models.FileField(upload_to='profile')
 
     def __str__(self):
         return self.email
@@ -22,7 +22,7 @@ class User(AbstractUser):
 class Slot(models.Model):
     TIMESLOT = (
         ('09:00 am To 10:00 am', '09:00 am To 10:00 am'),
-        ('10:00 am TO 11:00 am', '10:00 am TO 11:00 am'),
+        ('10:00 am To 11:00 am', '10:00 am TO 11:00 am'),
         ('11:00 am To 12:00 pm', '11:00 am To 12:00 pm'),
         ('12:00 pm To 01:00 pm', '12:00 pm To 01:00 pm'),
         ('02:00 pm To 03:00 pm', '02:00 pm To 03:00 pm'),

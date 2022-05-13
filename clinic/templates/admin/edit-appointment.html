@@ -14,6 +14,9 @@
 		<div class="row align-items-center">
 			<div class="col-lg-10 col-md-10 ">
 				<div class="appoinment-wrap mt-5 mt-lg-0">
+                    {% for msg in messages %}
+                    <p style="color: red;">{{msg}}</p>
+                    {% endfor %}
 					<h2 class="mb-2 title-color">Appointment Detail</h2>
 					     <form  method="POST">
                             {% csrf_token %}

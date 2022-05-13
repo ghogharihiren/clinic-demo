@@ -32,6 +32,9 @@
           <!-- Card header -->
           <div class="card-header border-0">
             <h3 class="mb-0"> Dr {{user1.first_name}} {{user1.last_name}}</h3>
+            {% for msg in messages %}
+            <p>{{msg}}</p>
+            {% endfor %}
           </div>
           <!-- Light table -->
           <div class="table-responsive">

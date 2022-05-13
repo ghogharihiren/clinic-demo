@@ -16,6 +16,9 @@
 				<div class="appoinment-wrap mt-5 mt-lg-0">
 					<h2 class="mb-2 title-color">Book appoinment</h2>
                     <p>DR {{slot.doctor.first_name}} {{slot.doctor.last_name}}</p>
+                    {% for msg in messages %}
+                    <p>{{msg}}</p>
+                    {% endfor %}
 					     <form  method="POST">
                             {% csrf_token %}
                     <div class="row">

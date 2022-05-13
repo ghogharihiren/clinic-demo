@@ -9,15 +9,19 @@
 
 {% block content %}
 <div class="row shuffle-wrapper portfolio-gallery">
-
+    {% for msg in messages %}
+    <p>{{msg}}</p>
+    {% endfor %}
     {% for user in user %}
     <div class="col-lg-3 col-sm-6 col-md-6 mb-4 shuffle-item" data-groups="[&quot;cat2&quot;]">
         <div class="position-relative doctor-inner-box">
+            {% if user.pic %}
             <div class="doctor-profile">
                 <div class="doctor-img">
-                <img src="" alt="doctor-image" class="img-fluid w-100">
+                <img src="{{user.pic.url}}" alt="doctor-image" class="img-fluid w-100">
                 </div>
             </div>
+            {% endif %}
             <div class="content mt-3">
                 <h4>{{user.first_name}} {{user.last_name}}</h4>
                 <p>degree:{{user.types}} /specialty:{{user.specialty}}</p>   

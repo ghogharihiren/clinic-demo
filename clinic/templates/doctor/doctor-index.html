@@ -191,6 +191,11 @@ $(document).ready(function(){
                 <div class="row">
                     <div class="col-sm-5">
                         <h2>My <b>slot</b></h2>
+                    
+                        {% for msg in messages %}
+                        <p style="color: red;">{{msg}}</p>
+                        {% endfor %}
+                        
                     </div>
                     <div class="col-sm-7">					
                     </div>

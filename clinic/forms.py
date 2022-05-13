@@ -29,7 +29,7 @@ class DoctorProfile(forms.ModelForm):
 class PatientProfile(forms.ModelForm):
     class Meta:
         model=User
-        fields=['first_name','last_name','gender','pic','mobile']           
+        fields=['username','email','first_name','last_name','gender','pic','mobile']           
         
 class SlotForm(forms.ModelForm):
     class Meta:

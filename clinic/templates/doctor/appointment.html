@@ -192,6 +192,9 @@ $(document).ready(function(){
                 <div class="row">
                     <div class="col-sm-5">
                         <h2>My <b>Appointment</b></h2>
+                        {% for msg in messages %}
+                        <p>{{msg}}</p>
+                        {% endfor %}
                     </div>
                     <div class="col-sm-7">					
                     </div>
@@ -209,6 +212,7 @@ $(document).ready(function(){
                 </thead>
                 <tbody>
                     {% for app in app %}
+                    {% if app.slot.doctor == request.user %}
                     <tr>
                         <td>{{app.slot.weeks}}</td>
                         <td><a href="#">{{app.slot.timeslot}} </a></td>
@@ -233,7 +237,7 @@ $(document).ready(function(){
                         </td>
                         {% endif %}
                     </tr>
-
+                    {% endif %}
                     {% endfor %}
                 
                     

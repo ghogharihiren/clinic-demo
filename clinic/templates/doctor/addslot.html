@@ -18,6 +18,9 @@
 			<div class="col-lg-20 col-md-10 ">
 				<div class="appoinment-wrap mt-5 mt-lg-0">
 					<h2 class="mb-2 title-color">Add Slot</h2>
+                    {% for msg in messages %}
+                    <p>{{msg}}</p>
+                    {% endfor %}
 					     <form method="POST" >
                              {% csrf_token %}
                          <div class="col-lg-6">

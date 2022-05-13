@@ -88,9 +88,9 @@
                                 <div class="text-center text-muted mb-4">
 
                                 </div>
-                                {% if msg %}
+                                {% for msg in messages %}
                                 <p style="color: red;">{{msg}}</p>
-                                {% endif %}
+                                {% endfor %}
                                 <form role="form" action="" method="POST">
                                     {% csrf_token %}
                                     <form role="form">
