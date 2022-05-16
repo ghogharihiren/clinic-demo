@@ -16,7 +16,7 @@
                     {% for msg in messages %}
                         <p>{{msg}}</p>
                         {% endfor %}
-
+                     <img src="{{request.user.pic.url}}" alt="doctor-image" width="200" height="200"><br>
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="pl-lg-4">
@@ -24,13 +24,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-username">Username</label>
-                                        <input type="text" id="input-username" name="username" class="form-control" placeholder="Username" value="{{user.username}}">
+                                        {{fm.username}}
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-email">Email address</label>
-                                        <input type="email" id="input-email" class="form-control" name="email" value="{{user.email}}">
+                                        {{fm.email}}
                                     </div>
                                 </div>
                             </div>
@@ -38,63 +38,53 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Gender</label>
-                                        <select Name='gender' id="" class="form-control">
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                        </select>
+                                        {{fm.gender}}
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">degree</label>
-                                        <select Name='types' id="" class="form-control">
-                                            <option value="mbbs">Mbbs</option>
-                                            <option value="md">Md</option>
-                                            <option value="ms">Ms</option>
-                                            <option value="bhms">Bhms</option>
-                                            <option value="bams">Bams</option>
-                                            <option value="bpt">Bpt</option>
-                                        </select>
+                                        {{fm.types}}
                                     </div>
                                 </div>
 
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-username">specialty</label>
-                                            <input type="text" id="input-username" name="specialty" class="form-control" value={{user.specialty}}>
+                                            {{fm.specialty}}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-email">clinicname</label>
-                                            <input type="text" id="input-email" class="form-control" name="clinicname" value="{{user.clinicname}}">
+                                            {{fm.clinicname}}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-email">Number</label>
-                                            <input type="text" id="input-email" class="form-control" name="mobile" value="{{user.mobile}}">
+                                            {{fm.mobile}}
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-last-name">Profile Pic</label> {% if user.pic %}
-                                            <input type="file" id="input-last-name" class="form-control" name="pic" placeholder="Last name" value="{{user.pic.url}}"> {% else %}
-                                            <input type="file" id="input-last-name" class="form-control" name="pic" placeholder="Last name"> {% endif %}
+                                            <label class="form-control-label" for="input-last-name">Profile Pic</label>
+                                            {{fm.pic}}
                                         </div>
                                     </div>
                             </div>
                         </div>
                         <hr class="my-4" />
                         <!-- Address -->
-                        <h6 class="heading-small text-muted mb-4">Contact information</h6>
+                        
                         <div class="pl-lg-4">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-address">Address</label>
-                                        <input id="input-address" class="form-control" name="addres"  value="{{user.addres}}" type="text">
+                                        {{fm.addres}}
                                     </div>
+                                    <a class="nav-item nav-link" href="{% url 'forgot-password' %}">Change Password</a>
                                 </div>
                             </div>
                         </div>

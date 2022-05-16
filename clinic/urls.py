@@ -8,6 +8,8 @@ urlpatterns = [
 path('',views.index,name='index'),   
 path('login/',views.loginpage,name='login'),
 path('logout/',views.user_logout,name='logout'),
+path('forgot-password/',views.forgot_password,name='forgot-password'),
+
     
 #---------------------------------admin-------------------------------
 path('admin-index/',views.admin_index,name='admin-index'),

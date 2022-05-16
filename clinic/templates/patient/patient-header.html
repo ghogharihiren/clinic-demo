@@ -6,9 +6,8 @@
   <meta name="description" content="Orbitor,business,company,agency,modern,bootstrap4,tech,software">
   <meta name="author" content="themefisher.com">
 
-  {% block title %}
-<title> Home </title>
-  {% endblock %}
+  <title>Home</title>
+
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="" />
 
@@ -22,6 +21,10 @@
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+     
+  
+        
+      <!-- Navbar items -->
 
 </head>
 
@@ -40,7 +43,6 @@
 		  </button>
 	  
 		  <div class="collapse navbar-collapse" id="navbarmain">
-			  {% if request.user.role == 'patient' %}
 			<ul class="navbar-nav ml-auto">
 			  <li class="nav-item active">
 				<a class="nav-link" href="{% url 'patient-index'%}">Home</a>
@@ -49,32 +51,12 @@
 			    <li class="nav-item"><a class="nav-link" href="{% url 'my-appointment' %}">My-Appointment</a></li>
 			    <li class="nav-item"><a class="nav-link" href="{% url 'doctor-details' %}">doctor</a></li>
 			    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">logout</a></li>
-				<form action="{% url 'search-doctor' %}" method="get" class="d-flex">
-					<input class="form-control me-2" type="text" name="search" placeholder="Search doctor/slot" aria-label="Search">
-					<button class="btn btn-outline-success" type="submit">Search</button>
-				</form>
+          <form action="{% url 'search-doctor' %}" method="get" class="d-flex">
+            <input class="form-control me-2" type="text" name="search" placeholder="Search doctor" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+			    
 			</ul>
-			{% elif request.user.role == 'doctor' %}
-			<ul class="navbar-nav ml-auto">
-				<li class="nav-item active">
-				  <a class="nav-link" href="{% url 'doctor-index'%}">Home</a>
-				</li>
-				 <li class="nav-item"><a class="nav-link" href="{% url 'doctor-profile' %}">Profile</a></li>
-				  <li class="nav-item"><a class="nav-link" href="{% url 'appointment' %}">My-Appointment</a></li>
-				  <li class="nav-item"><a class="nav-link" href="{% url 'addslot' %}">AddSlot</a></li>
-				  <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">logout</a></li>
-			  </ul>
-			{% else %}
-			<ul class="navbar-nav ml-auto">
-				<li class="nav-item active">
-				  <a class="nav-link" href="{% url 'admin-index'%}">Home</a>
-				</li>
-				 <li class="nav-item"><a class="nav-link" href="{% url 'doctor-user' %}">Doctor-list</a></li>
-				  <li class="nav-item"><a class="nav-link" href="{% url 'patient-user' %}">patient-user</a></li>
-				  <li class="nav-item"><a class="nav-link" href="{% url 'create-user' %}">create-user</a></li>
-				  <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">logout</a></li>
-			  </ul>
-			{% endif %}  
 		  </div>
 		</div>
 	</nav>

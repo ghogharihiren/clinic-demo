@@ -1,12 +1,34 @@
 from django.shortcuts import redirect, render
 from .forms import*
 from .models import*
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
+from django.contrib.auth.forms import PasswordChangeForm
+import random
 
 
 def index(request):
     return render(request,'index.html')
+
+
+def forgot_password(request):
+    password1=PasswordChangeForm(user=request.user)
+    if request.method == "POST":
+        fm=PasswordChangeForm(user=request.user,data=request.POST)
+        if fm.is_valid():
+            fm.save()
+            update_session_auth_hash(request,fm.user)
+            messages.success(request,'your password change')
+            logout(request)
+            return redirect('login')
+        else:
+            messages.info(request,'enter correct password')
+            return render(request,'forgot-password.html',{'pass':password1})
+    else:
+         return render(request,'forgot-password.html',{'pass':password1})
+     
 #---------------------------login/logout--------------------------------------------------
 
 def loginpage(request):
@@ -62,6 +84,7 @@ def doctor_user(request):
 def profile(request,pk):
     if request.user.is_authenticated:
         pro=User.objects.get(id=pk)
+        form=Editprofile(instance=pro)
         if request.method == "POST":
             fm=Editprofile(request.POST,instance=pro)
             if fm.is_valid():
@@ -74,8 +97,8 @@ def profile(request,pk):
                     return redirect('patient-user')
             else:
                 messages.info(request,'enter the valid data')
-                return render(request,'admin/profile.html',{'pro':pro})
-        return render(request,'admin/profile.html',{'pro':pro})
+                return render(request,'admin/profile.html',{'pro':pro,'form':form})
+        return render(request,'admin/profile.html',{'pro':pro,'form':form})
     return redirect('login')
 
 
@@ -85,8 +108,12 @@ def create_user(request):
         if request.method == 'POST':
             form=RegisterForm(request.POST,request.FILES)
             if form.is_valid():
+                message = f"""Hello your username is {form.cleaned_data['username']},
+                and Your password is {form.cleaned_data['password1']}"""
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [request.POST['email'],]
+                send_mail( "your login details", message, email_from, recipient_list ) 
                 form.save()
-                messages.success(request,'user created')
                 return redirect('admin-index')
             messages.info(request,'Enter the valid data')
             return render(request,'admin/create-user.html',{"fm":fm})
@@ -149,8 +176,8 @@ def doctor_profile(request):
         return redirect('login')
 
 def addslot(request):
-    form1=SlotForm()
     if request.user.is_authenticated:
+        form1=SlotForm()
         if request.method == "POST":
             form=SlotForm(request.POST)
             if form.is_valid():
@@ -226,6 +253,7 @@ def view_doctor(request,pk):
     
 def view_appointment(request,pk):
     slot=Slot.objects.get(id=pk)
+    form1=AppointmentBook()
     if request.method == 'POST':
         form=AppointmentBook(request.POST)
         if form.is_valid():
@@ -238,8 +266,8 @@ def view_appointment(request,pk):
             messages.success(request,'your appointment booked')
             return redirect('patient-index')
         messages.info(request,'enter the valid data')
-        return render(request,'patient/view-appoinment.html',{'slot':slot})
-    return render(request,'patient/view-appoinment.html',{'slot':slot})
+        return render(request,'patient/view-appoinment.html',{'slot':slot,'form':form1})
+    return render(request,'patient/view-appoinment.html',{'slot':slot,'form':form1})
         
 def my_appointment(request):
     app=Appointments.objects.filter(patient=request.user)
@@ -251,9 +279,13 @@ def search_doctor(request):
         search=request.GET.get('search')
         if search:
             user=User.objects.filter(first_name__icontains=search)
-            return render(request,'patient/search-doctor.html',{'user':user})
-        
-    
+            slot=Slot.objects.filter(weeks__icontains=search)
+            return render(request,'patient/search-doctor.html',{'user':user,'slot':slot})
+        else:
+            return redirect('patient-index')
+    else:
+        return redirect('patient-index')    
+     
 
 #----------------------------Appointment Status------------------------------------------------
 def cancel_appointment(request,pk):

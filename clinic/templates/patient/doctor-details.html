@@ -8,28 +8,85 @@
 
 
 {% block content %}
-<div class="row shuffle-wrapper portfolio-gallery">
-    {% for msg in messages %}
-    <p>{{msg}}</p>
-    {% endfor %}
-    {% for user in user %}
-    <div class="col-lg-3 col-sm-6 col-md-6 mb-4 shuffle-item" data-groups="[&quot;cat2&quot;]">
-        <div class="position-relative doctor-inner-box">
-            {% if user.pic %}
-            <div class="doctor-profile">
-                <div class="doctor-img">
-                <img src="{{user.pic.url}}" alt="doctor-image" class="img-fluid w-100">
-                </div>
-            </div>
-            {% endif %}
-            <div class="content mt-3">
-                <h4>{{user.first_name}} {{user.last_name}}</h4>
-                <p>degree:{{user.types}} /specialty:{{user.specialty}}</p>   
-                <h4 class="mb-0"><a href="{% url 'view-doctor' user.id%}">views details</a></h4> 
-            </div> 
+
+
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+           
+            
+          </div>
+          
         </div>
+      </div>
     </div>
-{% endfor %}
-</div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header border-0">
+            <h3 class="mb-0"> Dr {{user1.first_name}} {{user1.last_name}}</h3>
+            {% for msg in messages %}
+            <p>{{msg}}</p>
+            {% endfor %}
+          </div>
+          <!-- Light table -->
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="sort" data-sort="name">Name</th>
+                  <th scope="col" class="sort" data-sort="budget">Mobile</th>
+                  <th scope="col" class="sort" data-sort="budget">Degree</th>
+                  <th scope="col" class="sort" data-sort="status">Specialty</th>
+                  <th scope="col" class="sort" data-sort="status"></th>
+
+                </tr>
+              </thead>
+              <tbody class="list">
+                {% for user in user %}
+                <tr>
+                  <th scope="row">
+                    <div class="media align-items-center">
+                      <div class="media-body">
+                        <span class="name mb-0 text-sm">{{user.first_name}} {{user.last_name}}</span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="budget">
+                    <i class="fa fa-inr"></i> {{user.mobile}}
+                  </td>
+                  <td>
+                    <span class="badge badge-dot mr-4">
+                      
+                      <span class="status">{{user.types}}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge badge-dot mr-4">
+                      
+                      <span class="status">{{user.specialty}}</span>
+                    </span>
+                  </td>
+                  <td>
+			            <li class="nav-item"><a class="nav-link" href="{% url 'view-doctor' user.id%}">View</a></li>
+                  </td>
+                  <td class="text-right">
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
 {% endblock %}

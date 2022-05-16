@@ -1,23 +1,13 @@
-{% extends 'header.html' %} {% load static %}  
+{% extends 'header.html' %}
+{% load static %}
 
 {% block title %}
 <title>Home</title>
-{% endblock %} 
-
-{% block home %}
-<li class="nav-item ">
-    <a class="nav-link active" href="{% url 'index' %}">
-        <i class="ni ni-tv-2 text-primary"></i>
-        <span class="nav-link-text">Home</span>
-    </a>
-</li>  
 {% endblock %}
 
 
 
 {% block content %}
-
-
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -200,10 +190,12 @@ $(document).ready(function(){
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-5">
+                        <h2>My <b>slot</b></h2>
+                    
                         {% for msg in messages %}
                         <p style="color: red;">{{msg}}</p>
                         {% endfor %}
-                        <h2>Appointment <b> List</b></h2>
+                        
                     </div>
                     <div class="col-sm-7">					
                     </div>
@@ -214,27 +206,24 @@ $(document).ready(function(){
                     <tr>
                         <th>Day</th>
                         <th>Time</th>						
-                        <th>Dr.Name</th>
-                        <th>Patient name</th>
-                        <th>Status</th>
+                        <th>Avalible_slot</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for app in app%}
+                    {% for slot in slot%}
                     <tr>
-                        <td>{{app.slot.weeks}}</td>
-                        <td><a href="#">{{app.slot.timeslot}} </a></td>
-                        <td>{{app.slot.doctor.first_name}} {{app.slot.doctor.last_name}}</td>                        
-                        <td>{{app.patient.first_name}} {{app.patient.last_name}}</td>
-                        <td><span></span>{{app.status}}</td>
-                        {% if app.status == 'pending'%}
+                        <td>{{slot.weeks}}</td>
+                        <td><a href="#">{{slot.timeslot}} </a></td>
+                        <td>{{slot.avalible_slot}}</td>                    
                         <td>
-                            <a href="{% url 'edit-appointment' app.id %}" class="settings" title="Settings" data-toggle="tooltip"><i class="material-icons">&#xE8B8;</i></a>
-                            <a href="{% url 'delete-appointment' app.id %}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
+                        {% if slot.avalible_slot > 0%}
+                            <a class="mb-0"><a href="{% url 'view-doctor' user.id%}">views details</a> </a>
+                
                         </td>
                         {% endif %}
                     </tr>
+                   
                     {% endfor %}
                 
                     
@@ -243,6 +232,5 @@ $(document).ready(function(){
             
         </div>
     </div>
-</div>     
-
-    {% endblock %}
+</div>       
+{% endblock %}
