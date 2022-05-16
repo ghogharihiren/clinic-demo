@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.forms import PasswordChangeForm
 import random
-
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request,'index.html')
@@ -60,66 +60,63 @@ def user_logout(request):
 
  
 #-------------------------------Admin----------------------------------------------------------------------------------------
+@login_required(login_url='/login/')
 def admin_index(request):
-    if request.user.is_authenticated:
-        user=User.objects.all()
-        app=Appointments.objects.all()
-        return render(request,'admin/admin-index.html',{'user':user,'app':app})
-    return redirect('login')
+    user=User.objects.all()
+    app=Appointments.objects.all()
+    return render(request,'admin/admin-index.html',{'user':user,'app':app})
 
+@login_required(login_url='/login/')
 def patient_user(request):
-    if request.user.is_authenticated:
-       user=User.objects.filter(role='patient')[::-1]
-       return render(request,'admin/patient-user.html',{'user':user})
-    return redirect('login')
+    user=User.objects.filter(role='patient')[::-1]
+    return render(request,'admin/patient-user.html',{'user':user})
 
-    
+
+@login_required(login_url='/login/')   
 def doctor_user(request):
-    if request.user.is_authenticated:
-       user=User.objects.filter(role='doctor')[::-1]
-       return render(request,'admin/doctor-user.html',{'user':user})
-    return redirect('login')
+    user=User.objects.filter(role='doctor')[::-1]
+    return render(request,'admin/doctor-user.html',{'user':user})
 
-    
+
+@login_required(login_url='/login/')
 def profile(request,pk):
-    if request.user.is_authenticated:
-        pro=User.objects.get(id=pk)
-        form=Editprofile(instance=pro)
-        if request.method == "POST":
-            fm=Editprofile(request.POST,instance=pro)
-            if fm.is_valid():
-                fm.save()
-                if request.user.role == 'doctor':
-                    messages.success(request,'Profile update')
-                    return redirect('doctor-user')
-                else:
-                    messages.success(request,'Profile update')
-                    return redirect('patient-user')
+    pro=User.objects.get(id=pk)
+    form=Editprofile(instance=pro)
+    if request.method == "POST":
+        fm=Editprofile(request.POST,instance=pro)
+        if fm.is_valid():
+            fm.save()
+            if request.user.role == 'doctor':
+                messages.success(request,'Profile update')
+                return redirect('doctor-user')
             else:
-                messages.info(request,'enter the valid data')
-                return render(request,'admin/profile.html',{'pro':pro,'form':form})
-        return render(request,'admin/profile.html',{'pro':pro,'form':form})
-    return redirect('login')
+                messages.success(request,'Profile update')
+                return redirect('patient-user')
+        else:
+            messages.info(request,'enter the valid data')
+            return render(request,'admin/profile.html',{'pro':pro,'form':form})
+    return render(request,'admin/profile.html',{'pro':pro,'form':form})
 
 
+@login_required(login_url='/login/')
 def create_user(request):
-    if request.user.is_authenticated:
-        fm=RegisterForm()
-        if request.method == 'POST':
-            form=RegisterForm(request.POST,request.FILES)
-            if form.is_valid():
-                message = f"""Hello your username is {form.cleaned_data['username']},
-                and Your password is {form.cleaned_data['password1']}"""
-                email_from = settings.EMAIL_HOST_USER
-                recipient_list = [request.POST['email'],]
-                send_mail( "your login details", message, email_from, recipient_list ) 
-                form.save()
-                return redirect('admin-index')
-            messages.info(request,'Enter the valid data')
-            return render(request,'admin/create-user.html',{"fm":fm})
-        return render(request,'admin/create-user.html',{'fm':fm})
-    return redirect(login)
+    fm=RegisterForm()
+    if request.method == 'POST':
+        form=RegisterForm(request.POST,request.FILES)
+        if form.is_valid():
+            message = f"""Hello your username is {form.cleaned_data['username']},
+            and Your password is {form.cleaned_data['password1']}"""
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [request.POST['email'],]
+            send_mail( "your login details", message, email_from, recipient_list ) 
+            form.save()
+            return redirect('admin-index')
+        messages.info(request,'Enter the valid data')
+        return render(request,'admin/create-user.html',{"fm":fm})
+    return render(request,'admin/create-user.html',{'fm':fm})
 
+
+@login_required(login_url='/login/')
 def delete_profile(request,pk):
     user=User.objects.get(id=pk)
     if user.role == 'doctor':
@@ -131,7 +128,7 @@ def delete_profile(request,pk):
         messages.success(request,'delete patient successfully')
         return redirect('patient-user')
     
-    
+@login_required(login_url='/login/')
 def edit_appointment(request,pk):
     app=Appointments.objects.get(id=pk)    
     fm=EditAppointment(instance=app)
@@ -145,6 +142,7 @@ def edit_appointment(request,pk):
         return render(request,'admin/edit-appointment.html',{'app':app,'fm':fm})
     return render(request,'admin/edit-appointment.html',{'app':app,'fm':fm})
 
+@login_required(login_url='/login/')
 def delete_appointment(request,pk):
     app=Appointments.objects.get(id=pk)
     app.delete()
@@ -153,46 +151,48 @@ def delete_appointment(request,pk):
 
 
 #-----------------------------doctor-----------------------------------------------------------------------------------------
+
+
+@login_required(login_url='/login/')
 def doctor_index(request):
-    if request.user.is_authenticated:
-        slot=Slot.objects.filter(doctor=request.user)
-        return render(request,'doctor/doctor-index.html',{"slot":slot})
-    return redirect('login')
+    slot=Slot.objects.filter(doctor=request.user)
+    return render(request,'doctor/doctor-index.html',{"slot":slot})
 
+
+
+@login_required(login_url='/login/')
 def doctor_profile(request):
-    if request.user.is_authenticated:
-        form=DoctorProfile(instance=request.user)
-        if request.method == "POST":
-            form=DoctorProfile(request.POST,request.FILES,instance=request.user)
-            if form.is_valid():
-                form.save()
-                messages.success(request,'Profile update')
-                return redirect('doctor-index')
-            else:
-                messages.info(request,'Enter the valid data')
-                return render(request,'doctor/doctor-profile.html',{'fm':form})
-        return render(request,'doctor/doctor-profile.html',{'fm':form})
-    else:
-        return redirect('login')
 
+    form=DoctorProfile(instance=request.user)
+    if request.method == "POST":
+        form=DoctorProfile(request.POST,request.FILES,instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Profile update')
+            return redirect('doctor-index')
+        else:
+            messages.info(request,'Enter the valid data')
+            return render(request,'doctor/doctor-profile.html',{'fm':form})
+    return render(request,'doctor/doctor-profile.html',{'fm':form})
+
+@login_required(login_url='/login/')
 def addslot(request):
-    if request.user.is_authenticated:
-        form1=SlotForm()
-        if request.method == "POST":
-            form=SlotForm(request.POST)
-            if form.is_valid():
-                f=form.save(commit=False)
-                f.doctor=request.user
-                f.save()
-                messages.success(request,'add slot successfully')
-                return redirect("doctor-index")
-            else:
-                messages.info(request,'Enter the valid data')
-                return render(request,'doctor/addslot.html',{'form':form1})
-        return render(request,'doctor/addslot.html',{'form':form1})   
-    return redirect('login') 
+    form1=SlotForm()
+    if request.method == "POST":
+        form=SlotForm(request.POST)
+        if form.is_valid():
+            f=form.save(commit=False)
+            f.doctor=request.user
+            f.save()
+            messages.success(request,'add slot successfully')
+            return redirect("doctor-index")
+        else:
+            messages.info(request,'Enter the valid data')
+            return render(request,'doctor/addslot.html',{'form':form1})
+    return render(request,'doctor/addslot.html',{'form':form1})   
 
 
+@login_required(login_url='/login/')
 def edit_slot(request,pk):
     slot=Slot.objects.get(id=pk)
     form=EditSlot(instance=slot)
@@ -207,50 +207,49 @@ def edit_slot(request,pk):
             return render(request,'doctor/edit-slot.html',{'form':form})
     return render(request,'doctor/edit-slot.html',{'form':form})
         
-
+@login_required(login_url='/login/')
 def delete_slot(request,pk):
     slot=Slot.objects.get(id=pk)
     slot.delete()
     messages.success(request,'Your slot delete successfully')
     return redirect('doctor-index')
-
+@login_required(login_url='/login/')
 def appointment(request):
     app=Appointments.objects.all()
     return render(request,'doctor/appointment.html',{'app':app})
 #-------------------------------patient--------------------------------------------------------------------------------------
+
+@login_required(login_url='/login/')
 def patient_index(request):
-    if request.user.is_authenticated:
-       return render(request,'patient/patient-index.html')
-    return redirect('login')
+    return render(request,'patient/patient-index.html')
 
-
+@login_required(login_url='/login/')
 def patient_profile(request):
-    if request.user.is_authenticated:
-        form=PatientProfile(instance=request.user)
-        if request.method == 'POST':
-            fm=PatientProfile(request.POST,request.FILES,instance=request.user)
-            if fm.is_valid():
-                fm.save()
-                messages.success(request,'Profile update') 
-                return redirect('patient-index')
-            messages.info(request,'Enter the valid data')
-            return render(request,'patient/patient-profile.html',{'form':form})
-             
+    form=PatientProfile(instance=request.user)
+    if request.method == 'POST':
+        fm=PatientProfile(request.POST,request.FILES,instance=request.user)
+        if fm.is_valid():
+            fm.save()
+            messages.success(request,'Profile update') 
+            return redirect('patient-index')
+        messages.info(request,'Enter the valid data')
         return render(request,'patient/patient-profile.html',{'form':form})
-    return redirect('login')    
+            
+    return render(request,'patient/patient-profile.html',{'form':form})   
             
             
-            
+@login_required(login_url='/login/')     
 def doctor_details(request):
     user=User.objects.filter(role='doctor')
     return render(request,'patient/doctor-details.html',{'user':user})
 
+@login_required(login_url='/login/')
 def view_doctor(request,pk):
     user1=User.objects.get(id=pk)
     slot=Slot.objects.filter(doctor=user1)
     return render(request,'patient/view-doctor.html',{'slot':slot,'user1':user1})
     
-    
+@login_required(login_url='/login/')   
 def view_appointment(request,pk):
     slot=Slot.objects.get(id=pk)
     form1=AppointmentBook()
@@ -268,12 +267,13 @@ def view_appointment(request,pk):
         messages.info(request,'enter the valid data')
         return render(request,'patient/view-appoinment.html',{'slot':slot,'form':form1})
     return render(request,'patient/view-appoinment.html',{'slot':slot,'form':form1})
-        
+ 
+@login_required(login_url='/login/')       
 def my_appointment(request):
     app=Appointments.objects.filter(patient=request.user)
     return render(request,'patient/my-appointment.html',{'app':app})    
 
-
+@login_required(login_url='/login/')
 def search_doctor(request):
     if request.method =="GET":
         search=request.GET.get('search')
@@ -288,6 +288,7 @@ def search_doctor(request):
      
 
 #----------------------------Appointment Status------------------------------------------------
+@login_required(login_url='/login/')
 def cancel_appointment(request,pk):
     app=Appointments.objects.get(id=pk)
     app.status='canceled'
@@ -302,12 +303,14 @@ def cancel_appointment(request,pk):
         messages.success(request,'Your appointment canceled')
         return redirect('my-appointment')
 
+@login_required(login_url='/login/')
 def complate_appointment(request,pk):
     app=Appointments.objects.get(id=pk)
     app.status ='completed' 
     app.save()  
     return redirect('appointment')
 
+@login_required(login_url='/login/')
 def absent(request,pk):
     app=Appointments.objects.get(id=pk)
     app.status='absent'
