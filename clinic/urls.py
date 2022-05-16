@@ -9,6 +9,7 @@ path('',views.index,name='index'),
 path('login/',views.loginpage,name='login'),
 path('logout/',views.user_logout,name='logout'),
 path('forgot-password/',views.forgot_password,name='forgot-password'),
+path('forgot-password1/',views.forgot_password1,name='forgot-password1'),
 
     
 #---------------------------------admin-------------------------------

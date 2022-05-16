@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.contrib.auth.forms import PasswordChangeForm
 import random
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
+
 
 def index(request):
     return render(request,'index.html')
@@ -29,6 +31,21 @@ def forgot_password(request):
     else:
          return render(request,'forgot-password.html',{'pass':password1})
      
+def forgot_password1(request):
+    if request.method == "POST":
+       user=User.objects.get(email=request.POST['email'])
+       password = ''.join(random.choices('qwyertovghlk34579385',k=9))
+       subject="Rest Password"
+       message = f"""Hello {user.username},Your New password is {password}"""
+       email_from = settings.EMAIL_HOST_USER
+       recipient_list = [request.POST['email'],]
+       send_mail( subject, message, email_from, recipient_list )
+       user.password=make_password(password)
+       user.save()
+       messages.success(request,'New password send in your email')
+       return redirect('login')
+    return render(request,'forgot-password1.html')   
+     
 #---------------------------login/logout--------------------------------------------------
 
 def loginpage(request):
@@ -46,9 +63,11 @@ def loginpage(request):
                 else:
                     return redirect('admin-index')
             else:
+                print(user.errors)
                 messages.info(request,'Enter correct username or password')
                 return render(request,'login.html',{'form':form1})
         else:
+            print(form.errors)
             messages.info(request,'Enter correct username or password')
             return render(request,'login.html',{'form':form1})    
     return render(request,'login.html',{'form':form1}) 
@@ -105,7 +124,7 @@ def create_user(request):
         form=RegisterForm(request.POST,request.FILES)
         if form.is_valid():
             message = f"""Hello your username is {form.cleaned_data['username']},
-            and Your password is {form.cleaned_data['password1']}"""
+            and Your password is {form.cleaned_data['password1']} plase change your password """
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [request.POST['email'],]
             send_mail( "your login details", message, email_from, recipient_list ) 
