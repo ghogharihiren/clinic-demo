@@ -1,7 +1,8 @@
 from django.urls import path
 from .import views
-from django.conf.urls.static import static
-from django.conf import settings
+
+
+
 
 urlpatterns = [
     
@@ -9,9 +10,7 @@ path('',views.index,name='index'),
 path('login/',views.loginpage,name='login'),
 path('logout/',views.user_logout,name='logout'),
 path('forgot-password/',views.forgot_password,name='forgot-password'),
-path('forgot-password1/',views.forgot_password1,name='forgot-password1'),
-
-    
+path('forgot-password1/',views.forgot_password1,name='forgot-password1'),   
 #---------------------------------admin-------------------------------
 path('admin-index/',views.admin_index,name='admin-index'),
 path('patient-user/',views.patient_user,name='patient-user'),
@@ -28,7 +27,7 @@ path('doctor-profile/',views.doctor_profile,name='doctor-profile'),
 path('addslot/',views.addslot,name='addslot'),
 path('delete-slot/<int:pk>',views.delete_slot,name='delete-slot'),
 path('edit-slot/<int:pk>',views.edit_slot,name='edit-slot'),
-path('appointment/',views.appointment,name='appointment'),
+path('my-slot/',views.my_slot,name='my-slot'),
 path('complate-appointment/<int:pk>',views.complate_appointment,name='complate-appointment'),
 path('absent/<int:pk>',views.absent,name='absent'),
 
@@ -43,4 +42,4 @@ path('cancel-appointment/<int:pk>',views.cancel_appointment,name='cancel-appoint
 path('search-doctor/',views.search_doctor,name='search-doctor'),
     
     
-]+ static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
+]

@@ -40,9 +40,14 @@
               <th scope="col" class="sort" data-sort="budget">Time</th>
               <th scope="col" class="sort" data-sort="status">Available</th>
               <th scope="col" class="sort" data-sort="status">Doctor</th>
+              <th scope="col" class="sort" data-sort="status"></th>
               <th scope="col" class="sort" data-sort="status">Clinic Name</th>
               <th scope="col" class="sort" data-sort="status"></th>
+              <th scope="col" class="sort" data-sort="status">book</th>
               <th scope="col" class="sort" data-sort="status"></th>
+
+
+    
 
             </tr>
           </thead>
@@ -76,10 +81,10 @@
                   <span class="status">{{slot.doctor.clinicname}}</span>
                   </span>
                 <td>
-              {% if slot.avalible_slot > 0 %}
-              </td>
+                 {% if slot.avalible_slot > 0 %}
+                </td>
               <td>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'view-appointment' slot.id %}">Book</a></li>
+                  <a class="nav-link" href="{% url 'view-appointment' slot.id %}">Book</a>
               </td>
               <td class="text-right">
               </td>

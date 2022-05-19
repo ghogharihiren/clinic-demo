@@ -1,6 +1,4 @@
-{% extends 'header.html' %} {% load static %} {% block title %}
-<title>Profile Change</title>
-{% endblock %} 
+{% extends 'header.html' %} {% load static %} 
 
 {% block title %}
 <title>Profile</title>
@@ -19,7 +17,9 @@
                     {% for msg in messages %}
                         <p>{{msg}}</p>
                         {% endfor %}
+                        {% if request.user.pic %}
                      <img src="{{request.user.pic.url}}" alt="doctor-image" width="200" height="200"><br>
+                        {% endif %}
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="pl-lg-4">

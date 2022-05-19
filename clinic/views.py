@@ -12,9 +12,17 @@ from django.contrib.auth.hashers import make_password
 
 
 def index(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'doctor':
+            return render(request,'doctor/doctor-index.html')
+        elif request.user.role == 'patient':
+            return render(request,'patient/patient-index.html')
+        else:
+            return render(request,'admin/admin-index.html')      
     return render(request,'index.html')
 
 
+@login_required(login_url='/login/')
 def forgot_password(request):
     password1=PasswordChangeForm(user=request.user)
     if request.method == "POST":
@@ -49,30 +57,29 @@ def forgot_password1(request):
 #---------------------------login/logout--------------------------------------------------
 
 def loginpage(request):
-    form1=Userlogin()
-    if request.method == "POST":
-        form=Userlogin(request=request,data=request.POST)
-        if form.is_valid():
-            user=authenticate(username=form.cleaned_data['username'],password=form.cleaned_data['password'])
-            if user is not None:
-                login(request,user)
-                if user.role == 'doctor':
-                    return redirect('doctor-index')
-                elif user.role =='patient':
-                    return redirect('patient-index')
+    if request.user.is_authenticated:
+        return redirect('index')
+    else:
+        form1=Userlogin()
+        if request.method == "POST":
+            form=Userlogin(request=request,data=request.POST)
+            if form.is_valid():
+                user=authenticate(username=form.cleaned_data['username'],password=form.cleaned_data['password'])
+                if user is not None:
+                    login(request,user)
+                    return redirect('index')
                 else:
-                    return redirect('admin-index')
+                    print(user.errors)
+                    messages.info(request,'Enter correct username or password')
+                    return render(request,'login.html',{'form':form1})
             else:
-                print(user.errors)
+                print(form.errors)
                 messages.info(request,'Enter correct username or password')
-                return render(request,'login.html',{'form':form1})
-        else:
-            print(form.errors)
-            messages.info(request,'Enter correct username or password')
-            return render(request,'login.html',{'form':form1})    
-    return render(request,'login.html',{'form':form1}) 
+                return render(request,'login.html',{'form':form1})    
+        return render(request,'login.html',{'form':form1}) 
 
 
+@login_required(login_url='/login/')
 def user_logout(request):
     logout(request)
     return redirect('login')
@@ -174,14 +181,13 @@ def delete_appointment(request,pk):
 
 @login_required(login_url='/login/')
 def doctor_index(request):
-    slot=Slot.objects.filter(doctor=request.user)
-    return render(request,'doctor/doctor-index.html',{"slot":slot})
+    app=Appointments.objects.all()
+    return render(request,'doctor/doctor-index.html',{'app':app})
 
 
 
 @login_required(login_url='/login/')
 def doctor_profile(request):
-
     form=DoctorProfile(instance=request.user)
     if request.method == "POST":
         form=DoctorProfile(request.POST,request.FILES,instance=request.user)
@@ -233,9 +239,9 @@ def delete_slot(request,pk):
     messages.success(request,'Your slot delete successfully')
     return redirect('doctor-index')
 @login_required(login_url='/login/')
-def appointment(request):
-    app=Appointments.objects.all()
-    return render(request,'doctor/appointment.html',{'app':app})
+def my_slot(request):
+    slot=Slot.objects.filter(doctor=request.user)
+    return render(request,'doctor/my-slot.html',{'slot':slot})
 #-------------------------------patient--------------------------------------------------------------------------------------
 
 @login_required(login_url='/login/')

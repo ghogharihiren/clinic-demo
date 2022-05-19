@@ -45,7 +45,7 @@
                   <th scope="col" class="sort" data-sort="budget">Mobile</th>
                   <th scope="col" class="sort" data-sort="budget">Degree</th>
                   <th scope="col" class="sort" data-sort="status">Specialty</th>
-                  <th scope="col" class="sort" data-sort="status"></th>
+                  <th scope="col" class="sort" data-sort="status">Action</th>
 
                 </tr>
               </thead>
@@ -75,7 +75,7 @@
                     </span>
                   </td>
                   <td>
-			            <li class="nav-item"><a class="nav-link" href="{% url 'view-doctor' user.id%}">View</a></li>
+			            <a class="nav-link" href="{% url 'view-doctor' user.id%}">View</a>
                   </td>
                   <td class="text-right">
                   </td>

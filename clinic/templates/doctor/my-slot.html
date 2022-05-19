@@ -2,13 +2,12 @@
 {% load static %}
 
 {% block title %}
-<title>My-Appointment</title>
+<title>My-Slot</title>
 {% endblock %}
 
 
 
-{% block content %} 
-
+{% block content %}
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -191,10 +190,12 @@ $(document).ready(function(){
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-5">
-                        <h2>My <b>Appointment</b></h2>
+                        <h2>My <b>slot</b></h2>
+                    
                         {% for msg in messages %}
-                        <p>{{msg}}</p>
+                        <p style="color: red;">{{msg}}</p>
                         {% endfor %}
+                        
                     </div>
                     <div class="col-sm-7">					
                     </div>
@@ -205,39 +206,24 @@ $(document).ready(function(){
                     <tr>
                         <th>Day</th>
                         <th>Time</th>						
-                        <th>Patient</th>
-                        <th>Status</th>
+                        <th>Avalible_slot</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for app in app %}
-                    {% if app.slot.doctor == request.user %}
+                    {% for slot in slot%}
                     <tr>
-                        <td>{{app.slot.weeks}}</td>
-                        <td><a href="#">{{app.slot.timeslot}} </a></td>
-                        <td>{{app.patient.first_name}} {{app.patient.last_name}}</td>  
-                        <td>{{app.status}}</td>    
-                        
-                      {% if app.status == 'pending' %}  
-
+                        <td>{{slot.weeks}}</td>
+                        <td><a href="#">{{slot.timeslot}} </a></td>
+                        <td>{{slot.avalible_slot}}</td>                    
                         <td>
-                          <div class="dropdown show">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Action
-                            </a>
-                          
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                              <a class="dropdown-item" href="{% url 'complate-appointment' app.id%}">Complate-appointment</a>
-                              <a class="dropdown-item" href="{% url 'absent' app.id%}">cancel-appointment</a>
-                              <a class="dropdown-item" href="{% url 'cancel-appointment' app.id%}">patient-absent</a>
-                              <a class="dropdown-item" href="{% url 'delete-appointment' app.id%}">delete-appointment</a>
-                            </div>
-                          </div>
+                        {% if slot.avalible_slot > 0%}
+                            <a href="{% url 'edit-slot' slot.id %}" class="settings" title="Settings" data-toggle="tooltip"><i class="material-icons">&#xE8B8;</i></a>
+                            <a href="{% url 'delete-slot' slot.id %}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE5C9;</i></a>
                         </td>
                         {% endif %}
                     </tr>
-                    {% endif %}
+                   
                     {% endfor %}
                 
                     
@@ -246,7 +232,5 @@ $(document).ready(function(){
             
         </div>
     </div>
-</div> 
-
-
+</div>       
 {% endblock %}
