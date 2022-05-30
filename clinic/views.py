@@ -13,12 +13,14 @@ from django.contrib.auth.hashers import make_password
 
 def index(request):
     if request.user.is_authenticated:
+        app=Appointments.objects.all()
+        app1=Appointments.objects.filter(patient=request.user)
         if request.user.role == 'doctor':
-            return render(request,'doctor/doctor-index.html')
+            return render(request,'doctor/doctor-index.html',{'app':app1})
         elif request.user.role == 'patient':
             return render(request,'patient/patient-index.html')
         else:
-            return render(request,'admin/admin-index.html')      
+            return render(request,'admin/admin-index.html',{'app':app})      
     return render(request,'index.html')
 
 
@@ -112,7 +114,7 @@ def profile(request,pk):
         fm=Editprofile(request.POST,instance=pro)
         if fm.is_valid():
             fm.save()
-            if request.user.role == 'doctor':
+            if pro.role == 'doctor':
                 messages.success(request,'Profile update')
                 return redirect('doctor-user')
             else:
@@ -210,7 +212,7 @@ def addslot(request):
             f.doctor=request.user
             f.save()
             messages.success(request,'add slot successfully')
-            return redirect("doctor-index")
+            return redirect("my-slot")
         else:
             messages.info(request,'Enter the valid data')
             return render(request,'doctor/addslot.html',{'form':form1})
@@ -226,7 +228,7 @@ def edit_slot(request,pk):
         if fm.is_valid():
             fm.save()
             messages.success(request,'Your slot update')
-            return redirect('doctor-index')
+            return redirect('my-slot')
         else:
             messages.info(request,'Enter the valid data')
             return render(request,'doctor/edit-slot.html',{'form':form})
@@ -323,7 +325,7 @@ def cancel_appointment(request,pk):
     slot.save()
     if request.user.role == 'doctor':
         messages.success(request,'Your appointment canceled')
-        return redirect('appointment')
+        return redirect('doctor-index')
     else:
         messages.success(request,'Your appointment canceled')
         return redirect('my-appointment')
@@ -333,11 +335,11 @@ def complate_appointment(request,pk):
     app=Appointments.objects.get(id=pk)
     app.status ='completed' 
     app.save()  
-    return redirect('appointment')
+    return redirect('doctor-index')
 
 @login_required(login_url='/login/')
 def absent(request,pk):
     app=Appointments.objects.get(id=pk)
     app.status='absent'
     app.save()
-    return redirect('appointment')
+    return redirect('doctor-index')
